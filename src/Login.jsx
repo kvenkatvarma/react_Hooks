@@ -5,17 +5,23 @@ let Login=()=>{
    
     //executes on initial render and also if state gets updated it will execute
     useEffect(()=>{
-        console.log("render");
+       // console.log("render");
     });
     
     //executes on initial render and also if the email or password gets updated then it will execute
     useEffect(()=>{
-        console.log("render1");
-    },[email,password]);
+      //  console.log("render1");
+    },[email]);
 
     //executes only once on initial render and equal to componentDidMount
     useEffect(()=>{
-        console.log("render2");
+       document.title ="Login-eCommerce";
+    },[]);
+//It is similar to component unmounting phase
+    useEffect(()=>{
+      return ()=>{
+        console.log("Component unmounting phase");
+      };
     },[]);
 
     return <div className="row">

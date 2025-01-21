@@ -1,5 +1,8 @@
-import React from "react";
+import React,{useEffect} from "react";
 function Dashboard(){
+      useEffect(()=>{
+           document.title ="Dashboard-eCommerce";
+        },[]);
     return (
          <div>
             <h1>Dashboard</h1>
