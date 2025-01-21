@@ -1,8 +1,11 @@
-import React,{useState} from "react"
+import React,{useState,useEffect} from "react"
 let Login=()=>{
-    var [email,setEmail] = useState("abc@email.com");
-    var [password,setPassword] = useState("Abc123");
+    var [email,setEmail] = useState("");
+    var [password,setPassword] = useState("");
    
+    useEffect(()=>{
+        console.log("render")
+    },[email,password]);
     return <div className="row">
     <div className="col-lg-5 col-md-7 mx-auto">
       <div className="card border-success shadow-lg my-2">

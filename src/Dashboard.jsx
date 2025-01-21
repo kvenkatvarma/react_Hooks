@@ -1,9 +1,9 @@
 import React from "react";
 function Dashboard(){
     return (
-         <siv>
+         <div>
             <h1>Dashboard</h1>
-         </siv>
+         </div>
     );    
 }
 export default Dashboard;
