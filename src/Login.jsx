@@ -3,9 +3,21 @@ let Login=()=>{
     var [email,setEmail] = useState("");
     var [password,setPassword] = useState("");
    
+    //executes on initial render and also if state gets updated it will execute
     useEffect(()=>{
-        console.log("render")
+        console.log("render");
+    });
+    
+    //executes on initial render and also if the email or password gets updated then it will execute
+    useEffect(()=>{
+        console.log("render1");
     },[email,password]);
+
+    //executes only once on initial render and equal to componentDidMount
+    useEffect(()=>{
+        console.log("render2");
+    },[]);
+
     return <div className="row">
     <div className="col-lg-5 col-md-7 mx-auto">
       <div className="card border-success shadow-lg my-2">
