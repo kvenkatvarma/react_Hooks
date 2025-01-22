@@ -1,4 +1,4 @@
-import React,{useEffect,useContext,useState} from "react";
+import React,{useEffect,useContext,useState,useCallback} from "react";
 import { UserContext } from "./UserContext";
 import Orders from "./Order";
 import {OrderService,ProductsService} from "./Service";
@@ -7,40 +7,49 @@ function Dashboard(){
    let userContext = useContext(UserContext);
 useEffect(()=>{
       document.title ="Dashboard-eCommerce";  
-      (async()=>{
-         //fetch request
-        let response = await fetch(`http://localhost:5000/orders?userid=${userContext.user.currentUserId}`,{method:"GET"});
-        if(response.ok)
-        {
-         let body = await response.json();
-        
-
-         //get products
-         let productsResponse = await ProductsService.getProducts();
-         if(productsResponse.ok)
-         {
-            let prodbody =  await productsResponse.json();
-            body.forEach((order)=>{
-               console.log("Processing order:", order); // Log the order
-               console.log("Processing prodbody:", prodbody); // Log the order
-              order.product = ProductsService.getProductByProductId(prodbody,order.productId) ;
-            })
-            setOrders(body);
-         }
-         
-        }
-      })(
-
-      );
+      loadDataFromDatabase();
    },[userContext.user.currentUserId]);
 
+
+   const loadDataFromDatabase = useCallback(async () => {
+     
+        // Fetch request for orders
+        let response = await fetch(`http://localhost:5000/orders?userid=${userContext.user.currentUserId}`, { method: "GET" });
+        
+        if (response.ok) {
+          let body = await response.json();
+          
+          // Fetch products
+          let productsResponse = await ProductsService.getProducts();
+          if (productsResponse.ok) {
+            let prodbody = await productsResponse.json();
+            
+            // Loop through the orders and assign products
+            body.forEach((order) => {
+              console.log("Processing order:", order);  // Log the order
+              console.log("Processing prodbody:", prodbody);  // Log the products
+              
+              // Get the product based on productId and assign it to order.product
+              order.product = ProductsService.getProductByProductId(prodbody, order.productId);
+            });
+            
+            // After processing the orders, update the state
+            setOrders(body);
+          } else {
+            console.error("Failed to fetch products");
+          }
+        } else {
+          console.error("Failed to fetch orders");
+        }
+      
+    },[userContext.user.currentUserId]);
   let[orders,setOrders] = useState([]); 
  
 
     return (
          <div className="row">
             <div className="col-12 py-3 header">
-                   <h4><i className="fa fa-dashboard"></i> Dashboard</h4>
+                   <h4><i className="fa fa-dashboard"></i> Dashboard{" "} <button className="btn btn-sm btn-info" onClick={loadDataFromDatabase   }><i className="fa fa-refresh"></i>Refresh</button></h4>
             </div>
             <div className="col-12">
              
