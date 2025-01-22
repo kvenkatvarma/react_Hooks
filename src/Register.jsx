@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from "react";
+import { useHistory } from 'react-router-dom';
 let Register =()=>{
-
+  const history = useHistory();  
  let[state,setState]=useState({
   email:"",password:"",fullName:"",dateOfBirth:"",gender:"",country:"",
   receiveNewsLetters:"",
@@ -97,6 +98,7 @@ let onRegisterClick =async ()=>{
    if(response.ok)
    {
     setMessgae(<span className="text-success">Success</span>);
+    history.replace("/dashboard");
    }
  }
  else{
