@@ -1,9 +1,12 @@
-import React,{useState,useEffect} from "react"
+import React,{useState,useEffect,useContext} from "react"
 import { useHistory } from 'react-router-dom';
+import { UserContext } from "./UserContext";
 let Login=()=>{
   const history = useHistory();  
     var [email,setEmail] = useState("");
     var [password,setPassword] = useState("");
+   
+    let userContext = useContext(UserContext);
    
     let[dirty,setDirty] =useState({
       email:false,
@@ -67,6 +70,11 @@ let Login=()=>{
           let body =await response.json();
           if(body.length > 0)
           {
+            userContext.setUser({
+               ...userContext.user, isLoggedIn:true,
+               currentUserName:body[0].fullName,
+               currentUserId:body[0].id,
+            });
            history.replace("/dashboard");
           }
           else

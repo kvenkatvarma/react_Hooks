@@ -1,4 +1,5 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext} from "react";
+import { UserContext } from "./UserContext";
 import { useHistory } from 'react-router-dom';
 let Register =()=>{
   const history = useHistory();  
@@ -25,6 +26,7 @@ let[errors,setErrors]=useState({
     country:[],
     receiveNewsLetters:[]
 })
+let userContext = useContext(UserContext);
 let[dirty,setDirty]=useState({
     email:false,
     password:false,
@@ -97,6 +99,12 @@ let onRegisterClick =async ()=>{
    }});
    if(response.ok)
    {
+    let body = await response.json();
+    userContext.setUser({
+        ...userContext.user, isLoggedIn:true,
+        currentUserName:body.fullName,
+        currentUserId:body.id,
+     });
     setMessgae(<span className="text-success">Success</span>);
     history.replace("/dashboard");
    }
