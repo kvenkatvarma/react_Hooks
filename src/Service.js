@@ -31,3 +31,26 @@ export const CategoryService={
         return categories.find((category)=>category.id == categoryId);
     }
 }
+export const SortService={
+    getSortedArray:(elements,sortBy,sortOrder)=>{
+        if(!elements)
+        {
+            return elements;
+        }
+        let array =[...elements];
+        array.sort((a,b)=>{
+            if(a[sortBy] && b[sortBy])
+            {
+                return a[sortBy].toString().toLowerCase() - a[sortBy].toString().toLowerCase();
+            }
+           else{
+            return 0;
+           }
+        });
+        if(sortOrder == "DESC")
+        {
+            array.reverse();
+        }
+       return array;
+    }
+}

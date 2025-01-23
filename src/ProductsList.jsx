@@ -1,9 +1,11 @@
 import React,{useState,useEffect} from "react";
-import {ProductsService,CategoryService,BrandsService} from "./Service";
+import {ProductsService,CategoryService,BrandsService,SortService} from "./Service";
 function ProductsList(props){
     let [search,setSearch] = useState("");
     let [products,setProducts] = useState([]);
-   
+    let [sortBy,setSortBy] = useState("productName");
+    let [sortOrder,setSortOrder] =useState("ASC");
+    let [originalProducts,setOriginalProducts] = useState([]);
 
     useEffect(()=>{
         (async()=>{
@@ -14,7 +16,7 @@ function ProductsList(props){
             let categorybody = await categoryService.json();
 
 
-           let productsResponse = await fetch(`http://localhost:5000/products?productName_like=${search}`,{method:"GET"});
+           let productsResponse = await fetch(`http://localhost:5000/products?productName_like=${search}&_sort=productName&_order=ASC`,{method:"GET"});
            let body = await productsResponse.json();
             
            body.forEach(product=>{
@@ -24,9 +26,27 @@ function ProductsList(props){
            });
 
            setProducts(body);
+           setOriginalProducts(body);
         })();
         
     },[search]);
+
+    let onSortColumnNameClick=(event,colName)=>{
+            event.preventDefault();
+            setSortBy(colName);
+        let negatedSortOrder = sortOrder == "ASC" ? "DESC" :"ASC";
+        setSortOrder(negatedSortOrder);
+        setProducts(SortService.getSortedArray(originalProducts,colName,negatedSortOrder));
+    };
+    let getColumnHeader =(columnName,displayName)=>{
+ return <React.Fragment>
+      <a href="/#" onClick={(event)=>{
+                                onSortColumnNameClick(event,columnName);
+                        }}>{displayName}</a> {" "}
+                        {sortBy == columnName && sortOrder == "ASC" ? (<i className="fa fa-sort-up"></i>):( "")}
+                        {sortBy == columnName && sortOrder == "DESC" ? (<i className="fa fa-sort-down"></i>):( "")}
+ </React.Fragment>
+    };
   return <div className="row">
        <div className="col-12">
         <div className="row p-3 header">
@@ -49,18 +69,18 @@ function ProductsList(props){
                  <table className="table">
                    <thead>
                        <tr>
-                        <th>#</th>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Brand</th>
-                        <th>Category</th>
-                        <th>Rating</th>
+                        <th>
+                          {getColumnHeader("productName", "Product Name")}
+                        </th>
+                        <th>  {getColumnHeader("price", "Price")}</th>
+                        <th>  {getColumnHeader("brand", "Brand")}</th>
+                        <th>  {getColumnHeader("category", "Category")}</th>
+                        <th>  {getColumnHeader("rating", "Rating")}</th>
                        </tr>
                    </thead>
                    <tbody>
                        {products.map(product=>{
                          return <tr key={product.id}>
-                                    <td>{product.id}</td>
                                     <td>{product.productName}</td>
                                     <td>{product.price}</td>
                                     <td>{product.brand.brandName}</td>
