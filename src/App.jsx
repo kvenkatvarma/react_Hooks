@@ -6,6 +6,7 @@ import Register from "./Register";
 import NoMatchPage from "./NoMatchPage";
 import NavBar from "./NavBar";
 import { UserContext } from "./UserContext";
+import Store from "./Store";
 
 function App(){
   let[user,setUser]=useState({
@@ -20,7 +21,8 @@ function App(){
       <Switch>
         <Route path="/" exact component={Login} />
         <Route path="/register" component={Register} />
-        <Route path="/dashboard" component={Dashboard} />   
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/store" component={Store} />
         <Route component={NoMatchPage} />
       </Switch>
     </HashRouter>
