@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useMemo} from "react";
 import {ProductsService,CategoryService,BrandsService,SortService} from "./Service";
 function ProductsList(props){
     let [search,setSearch] = useState("");
@@ -6,11 +6,15 @@ function ProductsList(props){
     let [sortBy,setSortBy] = useState("productName");
     let [sortOrder,setSortOrder] =useState("ASC");
     let [originalProducts,setOriginalProducts] = useState([]);
+    let [brands,setBrands] = useState([]);
+    let [selectedBrand,setSelectedBrand] = useState("");
+
 
     useEffect(()=>{
         (async()=>{
             let brandsService = await BrandsService.fetchBrands();
             let brandsbody = await brandsService.json();
+            setBrands(brandsbody);
 
             let categoryService = await CategoryService.fetchCategories();
             let categorybody = await categoryService.json();
@@ -31,12 +35,16 @@ function ProductsList(props){
         
     },[search]);
 
+    let filteredBrands =useMemo(()=>{
+       return originalProducts.filter((prod)=>prod.brand.brandName.indexOf(selectedBrand) >= 0);
+    },[originalProducts,selectedBrand]);
+
     let onSortColumnNameClick=(event,colName)=>{
             event.preventDefault();
             setSortBy(colName);
         let negatedSortOrder = sortOrder == "ASC" ? "DESC" :"ASC";
         setSortOrder(negatedSortOrder);
-        setProducts(SortService.getSortedArray(originalProducts,colName,negatedSortOrder));
+        setProducts(SortService.getSortedArray(filteredBrands,colName,negatedSortOrder));
     };
     let getColumnHeader =(columnName,displayName)=>{
  return <React.Fragment>
@@ -47,6 +55,9 @@ function ProductsList(props){
                         {sortBy == columnName && sortOrder == "DESC" ? (<i className="fa fa-sort-down"></i>):( "")}
  </React.Fragment>
     };
+    useEffect(()=>{
+        setProducts(SortService.getSortedArray(filteredBrands,sortBy,sortOrder));
+    },[filteredBrands,sortBy,sortOrder]);
   return <div className="row">
        <div className="col-12">
         <div className="row p-3 header">
@@ -56,10 +67,18 @@ function ProductsList(props){
                     <span className="badge badge-secondary">{products.length}</span>
                   </h4>
               </div>
-              <div className="col-lg-9">
+              <div className="col-lg-6">
                    <input type="search" placeholder="Search" className="form-control" autoFocus value={search} onChange={(event)=>{
                           setSearch(event.target.value);
                    }}></input>
+              </div>
+              <div className="col-lg-3">
+                     <select className="form-control" value={selectedBrand} onChange={(event)=>{
+                        setSelectedBrand(event.target.value);
+                     }}>
+                        <option value="">All Brands</option>
+                        {brands.map(brand=><option value={brand.brandName} key={brand.id}>{brand.brandName} </option>)}
+                     </select>
               </div>
         </div>
        </div>
