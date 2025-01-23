@@ -6,7 +6,7 @@ let NavBar=()=>{
   let userContext = useContext(UserContext);
 let onLogoutClick =(event)=>{
     event.preventDefault();
-    userContext.setUser({isLoggedIn:false,currentUserId:null,currentUserName:null,currentUserRole:null});
+    userContext.dispatch({type:"logout"});
     window.location.hash ="/";
 };
     return <nav className="navbar navbar-expand-lg navbar-dark  bg-dark navbar-style">

@@ -100,11 +100,13 @@ let onRegisterClick =async ()=>{
    if(response.ok)
    {
     let body = await response.json();
-    userContext.setUser({
-        ...userContext.user, isLoggedIn:true,
+    userContext.dispatch({
+        type:"login",
+        payload:{
         currentUserName:body.fullName,
         currentUserId:body.id,
         currentUserRole: body.role,
+        }
      });
     setMessgae(<span className="text-success">Success</span>);
     history.replace("/dashboard");

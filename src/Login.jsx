@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useContext} from "react"
+import React,{useState,useEffect,useContext,useRef} from "react"
 import { useHistory } from 'react-router-dom';
 import { UserContext } from "./UserContext";
 let Login=()=>{
@@ -8,6 +8,8 @@ let Login=()=>{
    
     let userContext = useContext(UserContext);
    
+    let myEmailRef = useRef();
+
     let[dirty,setDirty] =useState({
       email:false,
       password:false,
@@ -29,6 +31,7 @@ let Login=()=>{
     //executes only once on initial render and equal to componentDidMount
     useEffect(()=>{
        document.title ="Login-eCommerce";
+       myEmailRef.current.focus();
     },[]);
 //It is similar to component unmounting phase
     useEffect(()=>{
@@ -70,11 +73,14 @@ let Login=()=>{
           let body =await response.json();
           if(body.length > 0)
           {
-            userContext.setUser({
-               ...userContext.user, isLoggedIn:true,
+            userContext.dispatch({type:"somework",payload:{x:10,y:20}});
+
+            userContext.dispatch({
+              type:"login",payload:{
                currentUserName:body[0].fullName,
                currentUserId:body[0].id,
                currentUserRole: body[0].role,
+              }
             });
             if(body[0].role == "user")
             {
@@ -119,7 +125,7 @@ let Login=()=>{
           <div className="card-body border-bottom border-success">
               <div className="form-group">
                    <label htmlFor="email">Email</label>
-                   <input type="text" className="form-control" id="email" name="email" value={email} onChange={(event)=>{setEmail(event.target.value);}} placeholder="Email"
+                   <input type="text" className="form-control" id="email" name="email" value={email} onChange={(event)=>{setEmail(event.target.value);}} ref={myEmailRef} placeholder="Email"
                    onBlur={()=>{
                     setDirty({...dirty,email:true});
                     validate();

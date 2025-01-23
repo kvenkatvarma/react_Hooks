@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useReducer } from "react";
 import Login from "./Login";
 import { HashRouter, Route, Switch } from "react-router-dom";
 import Dashboard from "./Dashboard";
@@ -9,15 +9,35 @@ import { UserContext } from "./UserContext";
 import Store from "./Store";
 import ProductsList from "./ProductsList";
 
-function App(){
-  let[user,setUser]=useState({
+let initialUser ={  
     isLoggedIn:false,
     currentUserId:null,
     currentUserName:null,
-    currentUserRole : null
-  });
+    currentUserRole : null  
+};
+let reducer =(state,action)=>{
+  switch(action.type)
+  {
+    case "login":
+   return {isLoggedIn:true,currentUserId:action.payload.currentUserId,
+    currentUserName:action.payload.currentUserName,currentUserRole : action.payload.currentUserRole
+   };
+   case "logout":
+    return {   isLoggedIn:false,
+      currentUserId:null,
+      currentUserName:null,
+      currentUserRole : null 
+    };
+    default: return state;
+  }
+ return state;
+};
+function App(){
+ 
+ let[user,dispatch] = useReducer(reducer,initialUser);
+
   return (  
-  <UserContext.Provider value ={{user,setUser}}>
+  <UserContext.Provider value ={{user,dispatch}}>
       <HashRouter>
         <NavBar/>
       <Switch>
