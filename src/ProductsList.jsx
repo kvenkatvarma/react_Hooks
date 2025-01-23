@@ -14,7 +14,7 @@ function ProductsList(props){
             let categorybody = await categoryService.json();
 
 
-           let productsResponse = await ProductsService.getProducts();
+           let productsResponse = await fetch(`http://localhost:5000/products?productName_like=${search}`,{method:"GET"});
            let body = await productsResponse.json();
             
            body.forEach(product=>{
@@ -26,7 +26,7 @@ function ProductsList(props){
            setProducts(body);
         })();
         
-    },[]);
+    },[search]);
   return <div className="row">
        <div className="col-12">
         <div className="row p-3 header">
