@@ -94,7 +94,7 @@ let onRegisterClick =async ()=>{
  if(isValid())
  {
    
-   let response = await fetch("http://localhost:5000/users",{method:"POST",body: JSON.stringify({email:state.email,password:state.password,fullName:state.fullName,dateOfBirth:state.dateOfBirth,gender:state.gender,country:state.country,receiveNewsLetters:state.receiveNewsLetters}),headers:{
+   let response = await fetch("http://localhost:5000/users",{method:"POST",body: JSON.stringify({email:state.email,password:state.password,fullName:state.fullName,dateOfBirth:state.dateOfBirth,gender:state.gender,country:state.country,receiveNewsLetters:state.receiveNewsLetters,role:"user"}),headers:{
     "Content-type":"applicstion/json"
    }});
    if(response.ok)
@@ -104,6 +104,7 @@ let onRegisterClick =async ()=>{
         ...userContext.user, isLoggedIn:true,
         currentUserName:body.fullName,
         currentUserId:body.id,
+        currentUserRole: body.role,
      });
     setMessgae(<span className="text-success">Success</span>);
     history.replace("/dashboard");

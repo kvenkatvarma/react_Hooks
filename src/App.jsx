@@ -7,12 +7,14 @@ import NoMatchPage from "./NoMatchPage";
 import NavBar from "./NavBar";
 import { UserContext } from "./UserContext";
 import Store from "./Store";
+import ProductsList from "./ProductsList";
 
 function App(){
   let[user,setUser]=useState({
     isLoggedIn:false,
     currentUserId:null,
-    currentUserName:null
+    currentUserName:null,
+    currentUserRole : null
   });
   return (  
   <UserContext.Provider value ={{user,setUser}}>
@@ -23,6 +25,8 @@ function App(){
         <Route path="/register" component={Register} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/store" component={Store} />
+        <Route path="/products" component={ProductsList} />
+
         <Route component={NoMatchPage} />
       </Switch>
     </HashRouter>

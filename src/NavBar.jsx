@@ -6,7 +6,7 @@ let NavBar=()=>{
   let userContext = useContext(UserContext);
 let onLogoutClick =(event)=>{
     event.preventDefault();
-    userContext.setUser({isLoggedIn:false,currentUserId:null,currentUserName:null});
+    userContext.setUser({isLoggedIn:false,currentUserId:null,currentUserName:null,currentUserRole:null});
     window.location.hash ="/";
 };
     return <nav className="navbar navbar-expand-lg navbar-dark  bg-dark navbar-style">
@@ -17,14 +17,20 @@ let onLogoutClick =(event)=>{
       </button>
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-          {userContext.user.isLoggedIn? (<li className="nav-item">
+          {userContext.user.isLoggedIn && userContext.user.currentUserRole == "user"? (<li className="nav-item">
             <NavLink className="nav-link" to="/dashboard" activeClassName="active"><i className="fa fa-dashboard"></i> Dashboard</NavLink></li>
             ):(
               ""
               )}
 
-{userContext.user.isLoggedIn? (<li className="nav-item">
+{userContext.user.isLoggedIn && userContext.user.currentUserRole == "user" ? (<li className="nav-item">
             <NavLink className="nav-link" to="/store" activeClassName="active"><i className="fa fa-shopping=bag"></i> Store</NavLink></li>
+            ):(
+              ""
+              )}
+
+{userContext.user.isLoggedIn && userContext.user.currentUserRole == "admin" ? (<li className="nav-item">
+            <NavLink className="nav-link" to="/products" activeClassName="active"><i className="fa fa-suitcase"></i> Products</NavLink></li>
             ):(
               ""
               )}
@@ -61,13 +67,8 @@ let onLogoutClick =(event)=>{
 </div>
           ):(
             ""
-          )}
-        
-         
-       
-       
-      
-      </div>
+          )}          
+        </div>
     </div>
   </nav>
 }

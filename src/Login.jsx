@@ -74,8 +74,18 @@ let Login=()=>{
                ...userContext.user, isLoggedIn:true,
                currentUserName:body[0].fullName,
                currentUserId:body[0].id,
+               currentUserRole: body[0].role,
             });
-           history.replace("/dashboard");
+            if(body[0].role == "user")
+            {
+              history.replace("/dashboard");
+            }
+            else
+            {
+              history.replace("/products");
+
+            }
+         
           }
           else
           {
